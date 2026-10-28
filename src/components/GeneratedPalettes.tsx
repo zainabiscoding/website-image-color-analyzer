@@ -4,13 +4,24 @@ import { GeneratedPalette, PaletteStyle } from '../types';
 import { paletteStyleLabels, paletteStyleDescriptions } from '../utils/paletteGeneration';
 import { formatPaletteForCopy, exportPaletteAsCSS, exportPaletteAsJSON, downloadFile } from '../utils/exportUtils';
 
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  surface: string;
+  border: string;
+}
+
 interface Props {
   palettes: GeneratedPalette[];
   onSelectPalette: (palette: GeneratedPalette) => void;
   selectedPaletteId?: string;
+  theme?: ThemeColors;
 }
 
-export default function GeneratedPalettes({ palettes, onSelectPalette, selectedPaletteId }: Props) {
+export default function GeneratedPalettes({ palettes, onSelectPalette, selectedPaletteId, theme }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedIds, setCopiedIds] = useState<Set<string>>(new Set());
   const [copiedColorKey, setCopiedColorKey] = useState<string | null>(null);

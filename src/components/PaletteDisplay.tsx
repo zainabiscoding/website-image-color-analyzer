@@ -4,14 +4,25 @@ import { Palette as PaletteType } from '../types';
 import ColorSwatch from './ColorSwatch';
 import { formatPaletteForCopy, exportPaletteAsCSS, exportPaletteAsJSON, downloadFile } from '../utils/exportUtils';
 
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  surface: string;
+  border: string;
+}
+
 interface Props {
   palette: PaletteType;
   imageUrl?: string;
   onPreview?: () => void;
   isPreviewing?: boolean;
+  theme?: ThemeColors;
 }
 
-export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreviewing }: Props) {
+export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreviewing, theme }: Props) {
   const [copiedAll, setCopiedAll] = useState(false);
 
   const handleCopyAll = async () => {

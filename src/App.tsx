@@ -25,6 +25,30 @@ const DEMO_COLORS: PaletteColor[] = [
   makeColor('#FFFFFF', 8, 'surface'),
 ];
 
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  surface: string;
+  border: string;
+}
+
+const generateRandomTheme = (): ThemeColors => {
+  const themes: ThemeColors[] = [
+    { primary: '#FF6B35', secondary: '#F7931E', accent: '#FFC857', background: '#FFF7ED', text: '#1F2937', surface: '#FFFFFF', border: '#E5E7EB' },
+    { primary: '#6366F1', secondary: '#8B5CF6', accent: '#EC4899', background: '#EEF2FF', text: '#1E293B', surface: '#FFFFFF', border: '#E0E7FF' },
+    { primary: '#10B981', secondary: '#059669', accent: '#F59E0B', background: '#ECFDF5', text: '#064E3B', surface: '#FFFFFF', border: '#D1FAE5' },
+    { primary: '#EF4444', secondary: '#F97316', accent: '#FBBF24', background: '#FEF2F2', text: '#450A0A', surface: '#FFFFFF', border: '#FECACA' },
+    { primary: '#3B82F6', secondary: '#06B6D4', accent: '#8B5CF6', background: '#EFF6FF', text: '#1E3A8A', surface: '#FFFFFF', border: '#DBEAFE' },
+    { primary: '#8B5CF6', secondary: '#D946EF', accent: '#F472B6', background: '#FAF5FF', text: '#3B0764', surface: '#FFFFFF', border: '#E9D5FF' },
+    { primary: '#14B8A6', secondary: '#06B6D4', accent: '#3B82F6', background: '#F0FDFA', text: '#134E4A', surface: '#FFFFFF', border: '#CCFBF1' },
+    { primary: '#F59E0B', secondary: '#EF4444', accent: '#EC4899', background: '#FFFBEB', text: '#451A03', surface: '#FFFFFF', border: '#FEF3C7' },
+  ];
+  return themes[Math.floor(Math.random() * themes.length)];
+};
+
 export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +59,7 @@ export default function App() {
   const [isPreviewingOriginal, setIsPreviewingOriginal] = useState(true);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
-  const [bgGradient, setBgGradient] = useState('linear-gradient(135deg, rgba(255, 237, 213, 0.4) 0%, rgba(252, 165, 165, 0.3) 50%, rgba(233, 213, 255, 0.4) 100%)');
+  const [theme, setTheme] = useState<ThemeColors>(generateRandomTheme());
 
   const handleImageColorsExtracted = useCallback((colors: PaletteColor[], url: string) => {
     const palette: Palette = {
@@ -92,18 +116,7 @@ export default function App() {
   };
 
   const handleRandomColors = () => {
-    const gradients = [
-      'linear-gradient(135deg, rgba(254, 202, 202, 0.4) 0%, rgba(253, 186, 116, 0.3) 50%, rgba(253, 224, 71, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(191, 219, 254, 0.4) 0%, rgba(103, 232, 249, 0.3) 50%, rgba(94, 234, 212, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(187, 247, 208, 0.4) 0%, rgba(110, 231, 183, 0.3) 50%, rgba(190, 242, 100, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(221, 214, 254, 0.4) 0%, rgba(196, 181, 253, 0.3) 50%, rgba(232, 121, 249, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(252, 165, 165, 0.4) 0%, rgba(251, 113, 133, 0.3) 50%, rgba(254, 202, 202, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(199, 210, 254, 0.4) 0%, rgba(147, 197, 253, 0.3) 50%, rgba(103, 232, 249, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(253, 230, 138, 0.4) 0%, rgba(253, 224, 71, 0.3) 50%, rgba(253, 186, 116, 0.4) 100%)',
-      'linear-gradient(135deg, rgba(153, 246, 228, 0.4) 0%, rgba(167, 243, 208, 0.3) 50%, rgba(110, 231, 183, 0.4) 100%)',
-    ];
-    const randomIndex = Math.floor(Math.random() * gradients.length);
-    setBgGradient(gradients[randomIndex]);
+    setTheme(generateRandomTheme());
   };
 
   const previewColors = isPreviewingOriginal
@@ -126,9 +139,9 @@ export default function App() {
   return (
     <div 
       className="min-h-screen transition-all duration-500"
-      style={{ background: bgGradient }}
+      style={{ backgroundColor: theme.background }}
     >
-      <Header onRandomColors={handleRandomColors} />
+      <Header onRandomColors={handleRandomColors} theme={theme} />
 
       {/* Notifications */}
       {error && (
@@ -159,17 +172,23 @@ export default function App() {
         {!hasResult && (
           <div className="text-center space-y-8 py-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-pink-100 shadow-sm">
-                <span className="text-sm font-medium text-gray-700">Extract • Generate • Preview</span>
+              <div 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm shadow-sm transition-all duration-500"
+                style={{ backgroundColor: `${theme.surface}CC`, border: `1px solid ${theme.border}` }}
+              >
+                <span className="text-sm font-medium" style={{ color: theme.text }}>Extract • Generate • Preview</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-3xl sm:text-5xl font-bold leading-tight" style={{ color: theme.text }}>
                 Discover Beautiful
                 <br />
-                <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 bg-clip-text text-transparent">
+                <span 
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: `linear-gradient(to right, ${theme.primary}, ${theme.secondary}, ${theme.accent})` }}
+                >
                   Color Palettes
                 </span>
               </h2>
-              <p className="text-gray-600 max-w-xl mx-auto text-lg">
+              <p className="max-w-xl mx-auto text-lg" style={{ color: theme.text, opacity: 0.7 }}>
                 Upload an image and watch the magic happen
               </p>
             </div>
@@ -191,24 +210,32 @@ export default function App() {
               <button
                 onClick={handleDemo}
                 disabled={loading}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 via-pink-400 to-purple-500 text-white font-medium shadow-lg shadow-pink-200/50 hover:shadow-xl hover:shadow-pink-300/50 hover:scale-105 transition-all duration-200 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50"
+                style={{ background: `linear-gradient(to right, ${theme.primary}, ${theme.secondary})` }}
               >
                 <Wand2 className="w-4 h-4" />
                 Try Demo Palette
               </button>
-              <p className="text-xs text-gray-500 mt-3">Explore with a sample palette</p>
+              <p className="text-xs mt-3" style={{ color: theme.text, opacity: 0.6 }}>Explore with a sample palette</p>
             </div>
 
             {/* Feature highlights */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 max-w-3xl mx-auto">
               {[
-                { title: 'Upload Image', desc: 'Drop any image to extract its colors', color: 'from-orange-100 to-orange-50' },
-                { title: 'Generate Variations', desc: '6 harmony styles for creative ideas', color: 'from-pink-100 to-pink-50' },
-                { title: 'Preview & Export', desc: 'See it in action, copy as CSS or JSON', color: 'from-purple-100 to-purple-50' },
-              ].map((feature) => (
-                <div key={feature.title} className={`p-5 rounded-2xl bg-gradient-to-br ${feature.color} border border-white/80 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200`}>
-                  <h3 className="font-bold text-gray-800 text-sm">{feature.title}</h3>
-                  <p className="text-xs text-gray-600 mt-1.5">{feature.desc}</p>
+                { title: 'Upload Image', desc: 'Drop any image to extract its colors', color: theme.primary },
+                { title: 'Generate Variations', desc: '6 harmony styles for creative ideas', color: theme.secondary },
+                { title: 'Preview & Export', desc: 'See it in action, copy as CSS or JSON', color: theme.accent },
+              ].map((feature, i) => (
+                <div 
+                  key={feature.title} 
+                  className="p-5 rounded-2xl border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                  style={{ 
+                    backgroundColor: `${feature.color}15`,
+                    borderColor: `${feature.color}30`
+                  }}
+                >
+                  <h3 className="font-bold text-sm" style={{ color: theme.text }}>{feature.title}</h3>
+                  <p className="text-xs mt-1.5" style={{ color: theme.text, opacity: 0.7 }}>{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -222,7 +249,12 @@ export default function App() {
             <div className="flex items-center justify-between">
               <button
                 onClick={handleReset}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 text-sm font-medium text-gray-600 hover:bg-white hover:shadow-md transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm text-sm font-medium hover:shadow-md transition-all"
+                style={{ 
+                  backgroundColor: `${theme.surface}CC`,
+                  border: `1px solid ${theme.border}`,
+                  color: theme.text
+                }}
               >
                 ← New Analysis
               </button>
@@ -230,30 +262,50 @@ export default function App() {
 
             {/* Original Palette */}
             {originalPalette && (
-              <section className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg shadow-pink-100/30 border border-white/80">
+              <section 
+                className="backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg border transition-all duration-500"
+                style={{ 
+                  backgroundColor: `${theme.surface}CC`,
+                  borderColor: theme.border
+                }}
+              >
                 <PaletteDisplay
                   palette={originalPalette}
                   imageUrl={imageUrl || undefined}
                   onPreview={handlePreviewOriginal}
                   isPreviewing={isPreviewingOriginal}
+                  theme={theme}
                 />
               </section>
             )}
 
             {/* Generated Palettes */}
             {generatedPalettes.length > 0 && (
-              <section className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg shadow-purple-100/30 border border-white/80">
+              <section 
+                className="backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg border transition-all duration-500"
+                style={{ 
+                  backgroundColor: `${theme.surface}CC`,
+                  borderColor: theme.border
+                }}
+              >
                 <GeneratedPalettes
                   palettes={generatedPalettes}
                   onSelectPalette={handlePreviewGenerated}
                   selectedPaletteId={selectedPreviewPalette?.id}
+                  theme={theme}
                 />
               </section>
             )}
 
             {/* Preview */}
             {previewColors.length > 0 && (
-              <section className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg shadow-orange-100/30 border border-white/80">
+              <section 
+                className="backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-lg border transition-all duration-500"
+                style={{ 
+                  backgroundColor: `${theme.surface}CC`,
+                  borderColor: theme.border
+                }}
+              >
                 <PalettePreview colors={previewColors} paletteName={previewName} />
               </section>
             )}
@@ -262,10 +314,16 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 mt-16 py-8 bg-white/50 backdrop-blur-sm">
+      <footer 
+        className="border-t mt-16 py-8 backdrop-blur-sm transition-all duration-500"
+        style={{ 
+          backgroundColor: `${theme.surface}80`,
+          borderColor: theme.border
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-gray-500">
-            Made with <span className="text-pink-500">♥</span> by <span className="font-medium text-gray-700">zainabiscoding</span>
+          <p className="text-sm" style={{ color: theme.text, opacity: 0.6 }}>
+            Made with <span style={{ color: theme.primary }}>♥</span> by <span className="font-medium" style={{ color: theme.text }}>zainabiscoding</span>
           </p>
         </div>
       </footer>
