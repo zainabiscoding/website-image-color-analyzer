@@ -1,10 +1,6 @@
 import { Loader2 } from 'lucide-react';
 
-interface Props {
-  mode: 'image' | 'website';
-}
-
-export default function LoadingState({ mode }: Props) {
+export default function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-4">
       <div className="relative">
@@ -14,14 +10,8 @@ export default function LoadingState({ mode }: Props) {
         <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 animate-pulse" />
       </div>
       <div className="text-center">
-        <p className="font-medium text-gray-700">
-          {mode === 'image' ? 'Analyzing image colors...' : 'Fetching and analyzing website...'}
-        </p>
-        <p className="text-sm text-gray-400 mt-1">
-          {mode === 'image'
-            ? 'Extracting dominant colors using Canvas API'
-            : 'This may take a few seconds'}
-        </p>
+        <p className="font-medium text-gray-700">Analyzing image colors...</p>
+        <p className="text-sm text-gray-400 mt-1">Extracting dominant colors using Canvas API</p>
       </div>
       <div className="flex gap-1.5 mt-2">
         {[0, 1, 2, 3, 4].map((i) => (

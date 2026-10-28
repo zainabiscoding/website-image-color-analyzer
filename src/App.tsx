@@ -1,14 +1,12 @@
 import { useState, useCallback } from 'react';
 import { AlertCircle, X, CheckCircle2, Wand2 } from 'lucide-react';
 import Header from './components/Header';
-import ModeSelector from './components/ModeSelector';
 import ImageUpload from './components/ImageUpload';
-import WebsiteInput from './components/WebsiteInput';
 import PaletteDisplay from './components/PaletteDisplay';
 import GeneratedPalettes from './components/GeneratedPalettes';
 import PalettePreview from './components/PalettePreview';
 import LoadingState from './components/LoadingState';
-import { AnalysisMode, Palette, GeneratedPalette, PaletteColor } from './types';
+import { Palette, GeneratedPalette, PaletteColor } from './types';
 import { generateAllPalettes } from './utils/paletteGeneration';
 import { hexToRgb, rgbToHsl } from './utils/colorUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,7 +26,6 @@ const DEMO_COLORS: PaletteColor[] = [
 ];
 
 export default function App() {
-  const [mode, setMode] = useState<AnalysisMode>('image');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -53,17 +50,6 @@ export default function App() {
     setSelectedPreviewPalette(generated[0] || null);
     setHasResult(true);
     setSuccessMessage('Colors extracted successfully!');
-    setTimeout(() => setSuccessMessage(null), 3000);
-  }, []);
-
-  const handleWebsitePaletteReady = useCallback((palette: Palette) => {
-    setOriginalPalette(palette);
-    setImageUrl(null);
-    const generated = generateAllPalettes(palette.colors, palette.id, 'website');
-    setGeneratedPalettes(generated);
-    setSelectedPreviewPalette(generated[0] || null);
-    setHasResult(true);
-    setSuccessMessage('Website colors analyzed successfully!');
     setTimeout(() => setSuccessMessage(null), 3000);
   }, []);
 
@@ -144,29 +130,19 @@ export default function App() {
                 <span className="bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent"> Color Palettes</span>
               </h2>
               <p className="text-gray-500 max-w-xl mx-auto">
-                Extract colors from images or websites, generate harmonious alternatives, and preview them in action.
+                Extract colors from your images, generate harmonious alternatives, and preview them in action.
               </p>
             </div>
 
-            <ModeSelector selectedMode={mode} onSelectMode={setMode} />
-
             {loading ? (
-              <LoadingState mode={mode} />
+              <LoadingState />
             ) : (
               <div className="pt-2">
-                {mode === 'image' ? (
-                  <ImageUpload
-                    onColorsExtracted={handleImageColorsExtracted}
-                    onLoading={setLoading}
-                    onError={handleError}
-                  />
-                ) : (
-                  <WebsiteInput
-                    onPaletteReady={handleWebsitePaletteReady}
-                    onLoading={setLoading}
-                    onError={handleError}
-                  />
-                )}
+                <ImageUpload
+                  onColorsExtracted={handleImageColorsExtracted}
+                  onLoading={setLoading}
+                  onError={handleError}
+                />
               </div>
             )}
 
@@ -211,12 +187,6 @@ export default function App() {
               >
                 ← Start New Analysis
               </button>
-              <div className="flex items-center gap-2">
-                <ModeSelector selectedMode={mode} onSelectMode={(newMode) => {
-                  handleReset();
-                  setMode(newMode);
-                }} />
-              </div>
             </div>
 
             {/* Original Palette */}

@@ -13,6 +13,22 @@ interface Props {
 export default function GeneratedPalettes({ palettes, onSelectPalette, selectedPaletteId }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedIds, setCopiedIds] = useState<Set<string>>(new Set());
+  const [copiedColorKey, setCopiedColorKey] = useState<string | null>(null);
+
+  const handleCopyColor = async (hex: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(hex);
+    } catch {
+      const textArea = document.createElement('textarea');
+      textArea.value = hex;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+    setCopiedColorKey(key);
+    setTimeout(() => setCopiedColorKey(null), 1500);
+  };
 
   const handleCopyPalette = async (palette: GeneratedPalette) => {
     const text = formatPaletteForCopy(palette);
@@ -117,40 +133,73 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
                 </div>
 
                 {/* Color strip */}
-                <div
-                  className="flex h-12 mt-3 rounded-xl overflow-hidden cursor-pointer shadow-sm"
-                  onClick={() => onSelectPalette(palette)}
-                >
-                  {palette.colors.map((color, i) => (
-                    <div
-                      key={i}
-                      className="flex-1 relative group/color transition-all duration-200 hover:flex-[2]"
-                      style={{ backgroundColor: color.hex }}
-                      title={color.hex}
-                    >
-                      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-medium opacity-0 group-hover/color:opacity-100 transition-opacity"
-                        style={{ color: color.rgb.r * 0.299 + color.rgb.g * 0.587 + color.rgb.b * 0.114 > 128 ? '#1a1a2e' : '#ffffff' }}
+                <div className="flex h-12 mt-3 rounded-xl overflow-hidden shadow-sm">
+                  {palette.colors.map((color, i) => {
+                    const colorKey = `${palette.id}-${i}`;
+                    const isCopiedColor = copiedColorKey === colorKey;
+                    return (
+                      <div
+                        key={i}
+                        className="flex-1 relative group/color transition-all duration-200 hover:flex-[2] cursor-pointer"
+                        style={{ backgroundColor: color.hex }}
+                        title={`${color.hex} - Click to copy`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyColor(color.hex, colorKey);
+                        }}
                       >
-                        {color.hex}
-                      </span>
-                    </div>
-                  ))}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity">
+                          {isCopiedColor ? (
+                            <Check className="w-4 h-4" style={{ color: color.rgb.r * 0.299 + color.rgb.g * 0.587 + color.rgb.b * 0.114 > 128 ? '#1a1a2e' : '#ffffff' }} />
+                          ) : (
+                            <span className="text-[10px] font-mono font-medium"
+                              style={{ color: color.rgb.r * 0.299 + color.rgb.g * 0.587 + color.rgb.b * 0.114 > 128 ? '#1a1a2e' : '#ffffff' }}
+                            >
+                              {color.hex}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
+                
+                {/* Preview button */}
+                <button
+                  onClick={() => onSelectPalette(palette)}
+                  className="mt-2 text-xs text-violet-600 hover:text-violet-700 font-medium"
+                >
+                  {isSelected ? '✓ Previewing' : 'Preview this palette →'}
+                </button>
               </div>
 
               {isExpanded && (
                 <div className="px-4 pb-4 border-t border-gray-100 pt-3">
                   <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-                    {palette.colors.map((color, i) => (
-                      <div key={i} className="text-center">
-                        <div
-                          className="w-full aspect-square rounded-lg mb-1.5 shadow-sm"
-                          style={{ backgroundColor: color.hex }}
-                        />
-                        <p className="text-[10px] font-mono text-gray-600 truncate">{color.hex}</p>
-                        <p className="text-[9px] text-gray-400">{color.role}</p>
-                      </div>
-                    ))}
+                    {palette.colors.map((color, i) => {
+                      const colorKey = `${palette.id}-expanded-${i}`;
+                      const isCopiedColor = copiedColorKey === colorKey;
+                      return (
+                        <div key={i} className="text-center group/color-card">
+                          <div
+                            className="w-full aspect-square rounded-lg mb-1.5 shadow-sm cursor-pointer relative overflow-hidden"
+                            style={{ backgroundColor: color.hex }}
+                            onClick={() => handleCopyColor(color.hex, colorKey)}
+                            title={`${color.hex} - Click to copy`}
+                          >
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/color-card:opacity-100 transition-opacity bg-black/10">
+                              {isCopiedColor ? (
+                                <Check className="w-5 h-5" style={{ color: color.rgb.r * 0.299 + color.rgb.g * 0.587 + color.rgb.b * 0.114 > 128 ? '#1a1a2e' : '#ffffff' }} />
+                              ) : (
+                                <Copy className="w-5 h-5" style={{ color: color.rgb.r * 0.299 + color.rgb.g * 0.587 + color.rgb.b * 0.114 > 128 ? '#1a1a2e' : '#ffffff' }} />
+                              )}
+                            </div>
+                          </div>
+                          <p className="text-[10px] font-mono text-gray-600 truncate">{color.hex}</p>
+                          <p className="text-[9px] text-gray-400">{color.role}</p>
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="flex gap-2 mt-3">
                     <button
