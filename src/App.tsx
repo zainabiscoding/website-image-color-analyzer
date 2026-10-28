@@ -35,6 +35,7 @@ export default function App() {
   const [isPreviewingOriginal, setIsPreviewingOriginal] = useState(true);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
+  const [bgGradient, setBgGradient] = useState('from-orange-50/40 via-pink-50/30 to-purple-50/40');
 
   const handleImageColorsExtracted = useCallback((colors: PaletteColor[], url: string) => {
     const palette: Palette = {
@@ -90,6 +91,21 @@ export default function App() {
     setError(null);
   };
 
+  const handleRandomColors = () => {
+    const colors = [
+      'from-red-50/40 via-orange-50/30 to-yellow-50/40',
+      'from-blue-50/40 via-cyan-50/30 to-teal-50/40',
+      'from-green-50/40 via-emerald-50/30 to-lime-50/40',
+      'from-purple-50/40 via-violet-50/30 to-fuchsia-50/40',
+      'from-pink-50/40 via-rose-50/30 to-red-50/40',
+      'from-indigo-50/40 via-blue-50/30 to-cyan-50/40',
+      'from-amber-50/40 via-yellow-50/30 to-orange-50/40',
+      'from-teal-50/40 via-green-50/30 to-emerald-50/40',
+    ];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    setBgGradient(colors[randomIndex]);
+  };
+
   const previewColors = isPreviewingOriginal
     ? originalPalette?.colors || []
     : selectedPreviewPalette?.colors || originalPalette?.colors || [];
@@ -108,8 +124,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-pink-50/30 to-purple-50/40">
-      <Header />
+    <div className={`min-h-screen bg-gradient-to-br ${bgGradient} transition-all duration-500`}>
+      <Header onRandomColors={handleRandomColors} />
 
       {/* Notifications */}
       {error && (
@@ -177,7 +193,7 @@ export default function App() {
                 <Wand2 className="w-4 h-4" />
                 Try Demo Palette
               </button>
-              <p className="text-xs text-gray-500 mt-3">No upload needed — explore with a sample palette</p>
+              <p className="text-xs text-gray-500 mt-3">Explore with a sample palette</p>
             </div>
 
             {/* Feature highlights */}
