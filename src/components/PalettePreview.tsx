@@ -44,24 +44,28 @@ export default function PalettePreview({ colors, paletteName }: Props) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Monitor className="w-5 h-5 text-blue-500" />
-            Preview
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
+              <Monitor className="w-4 h-4 text-white" />
+            </div>
+            Live Preview
           </h2>
-          <p className="text-sm text-gray-500 mt-0.5">{paletteName}</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {paletteName} 👀
+          </p>
         </div>
-        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-full p-1 border border-blue-100">
           <button
             onClick={() => setViewMode('desktop')}
-            className={`p-2 rounded-md transition-colors ${
-              viewMode === 'desktop' ? 'bg-white shadow-sm text-violet-600' : 'text-gray-400 hover:text-gray-600'
+            className={`p-2 rounded-full transition-all ${
+              viewMode === 'desktop' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             <Monitor className="w-4 h-4" />
           </button>
           <button
             onClick={() => setViewMode('mobile')}
-            className={`p-2 rounded-md transition-colors ${
-              viewMode === 'mobile' ? 'bg-white shadow-sm text-violet-600' : 'text-gray-400 hover:text-gray-600'
+            className={`p-2 rounded-full transition-all ${
+              viewMode === 'mobile' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             <Smartphone className="w-4 h-4" />

@@ -64,11 +64,13 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-amber-500" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
           Generated Palettes
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          {palettes.length} alternative palettes based on your extracted colors
+          {palettes.length} beautiful variations based on your colors ✨
         </p>
       </div>
 
@@ -81,24 +83,24 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
           return (
             <div
               key={palette.id}
-              className={`rounded-2xl border-2 transition-all duration-200 overflow-hidden ${
+              className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
                 isSelected
-                  ? 'border-violet-400 shadow-md shadow-violet-100'
-                  : 'border-gray-100 hover:border-gray-200'
+                  ? 'border-pink-400 shadow-lg shadow-pink-100/50 bg-gradient-to-br from-white to-pink-50/30'
+                  : 'border-gray-100 hover:border-pink-200 hover:shadow-md bg-white'
               }`}
             >
-              <div className="p-4">
+              <div className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-800">{paletteStyleLabels[palette.style]}</h3>
+                      <h3 className="font-bold text-gray-800">{paletteStyleLabels[palette.style]}</h3>
                       {isSelected && (
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-violet-100 text-violet-600">
-                          Previewing
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 text-white shadow-sm">
+                          ✨ Previewing
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5">{paletteStyleDescriptions[palette.style]}</p>
+                    <p className="text-xs text-gray-500 mt-1">{paletteStyleDescriptions[palette.style]}</p>
                   </div>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
@@ -167,9 +169,13 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
                 {/* Preview button */}
                 <button
                   onClick={() => onSelectPalette(palette)}
-                  className="mt-2 text-xs text-violet-600 hover:text-violet-700 font-medium"
+                  className={`mt-3 text-xs font-bold transition-all ${
+                    isSelected 
+                      ? 'text-pink-600' 
+                      : 'text-gray-500 hover:text-pink-600 hover:translate-x-1'
+                  }`}
                 >
-                  {isSelected ? '✓ Previewing' : 'Preview this palette →'}
+                  {isSelected ? '✓ Previewing this palette' : 'Preview this palette →'}
                 </button>
               </div>
 

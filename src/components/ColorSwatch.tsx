@@ -33,22 +33,22 @@ export default function ColorSwatch({ color, index }: Props) {
   const textColor = luminance > 128 ? 'text-gray-800' : 'text-white';
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
+    <div className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       <div
         className="h-24 sm:h-28 relative cursor-pointer"
         style={{ backgroundColor: color.hex }}
         onClick={() => handleCopy(color.hex, 'hex')}
       >
         <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity ${textColor}`}>
-          <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5">
+          <div className="flex items-center gap-1.5 bg-white/30 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
             {copied === 'hex' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span className="text-xs font-medium">
-              {copied === 'hex' ? 'Copied!' : 'Copy HEX'}
+            <span className="text-xs font-bold">
+              {copied === 'hex' ? 'Copied! ✓' : 'Copy'}
             </span>
           </div>
         </div>
         {color.role && (
-          <span className={`absolute top-2 left-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm ${textColor}`}>
+          <span className={`absolute top-2 left-2 text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/30 backdrop-blur-sm ${textColor} shadow-sm`}>
             {color.role}
           </span>
         )}

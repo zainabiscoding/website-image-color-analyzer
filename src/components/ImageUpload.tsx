@@ -79,10 +79,10 @@ export default function ImageUpload({ onColorsExtracted, onLoading, onError }: P
           onDragLeave={() => setDragActive(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 ${
+          className={`relative border-2 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-all duration-300 ${
             dragActive
-              ? 'border-violet-400 bg-violet-50 scale-[1.02]'
-              : 'border-gray-200 bg-gray-50/50 hover:border-violet-300 hover:bg-violet-50/50'
+              ? 'border-pink-400 bg-gradient-to-br from-orange-50 to-pink-50 scale-[1.02] shadow-lg shadow-pink-100'
+              : 'border-gray-200 bg-gradient-to-br from-white to-orange-50/30 hover:border-pink-300 hover:shadow-md hover:shadow-pink-100/50'
           }`}
         >
           <input
@@ -92,15 +92,24 @@ export default function ImageUpload({ onColorsExtracted, onLoading, onError }: P
             onChange={handleFileChange}
             className="hidden"
           />
-          <div className="flex flex-col items-center gap-3">
-            <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors ${
-              dragActive ? 'bg-violet-100' : 'bg-gray-100'
+          <div className="flex flex-col items-center gap-4">
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${
+              dragActive 
+                ? 'bg-gradient-to-br from-orange-400 to-pink-500 rotate-6' 
+                : 'bg-gradient-to-br from-orange-100 to-pink-100'
             }`}>
-              <Upload className={`w-6 h-6 ${dragActive ? 'text-violet-500' : 'text-gray-400'}`} />
+              <Upload className={`w-7 h-7 ${dragActive ? 'text-white' : 'text-pink-500'}`} />
             </div>
             <div>
-              <p className="font-medium text-gray-700">Drop an image here or click to browse</p>
-              <p className="text-sm text-gray-400 mt-1">PNG, JPG, or WebP • Max 10MB</p>
+              <p className="font-bold text-gray-800 text-lg">
+                {dragActive ? 'Drop it like it\'s hot! 🔥' : 'Upload your image'}
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Drag & drop or click to browse
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                PNG, JPG, or WebP • Max 10MB
+              </p>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Palette, Copy, Check, Download } from 'lucide-react';
+import { Palette, Copy, Check, Download, Eye } from 'lucide-react';
 import { useState } from 'react';
 import { Palette as PaletteType } from '../types';
 import ColorSwatch from './ColorSwatch';
@@ -7,9 +7,11 @@ import { formatPaletteForCopy, exportPaletteAsCSS, exportPaletteAsJSON, download
 interface Props {
   palette: PaletteType;
   imageUrl?: string;
+  onPreview?: () => void;
+  isPreviewing?: boolean;
 }
 
-export default function PaletteDisplay({ palette, imageUrl }: Props) {
+export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreviewing }: Props) {
   const [copiedAll, setCopiedAll] = useState(false);
 
   const handleCopyAll = async () => {
@@ -43,14 +45,29 @@ export default function PaletteDisplay({ palette, imageUrl }: Props) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Palette className="w-5 h-5 text-violet-500" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+              <Palette className="w-4 h-4 text-white" />
+            </div>
             Extracted Palette
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            {palette.colors.length} colors from {palette.sourceType === 'image' ? 'image' : palette.name}
+            {palette.colors.length} colors extracted from your image ✨
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {onPreview && (
+            <button
+              onClick={onPreview}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isPreviewing
+                  ? 'bg-violet-100 text-violet-700 border border-violet-200'
+                  : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Eye className="w-4 h-4" />
+              {isPreviewing ? 'Previewing' : 'Preview'}
+            </button>
+          )}
           <button
             onClick={handleCopyAll}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"

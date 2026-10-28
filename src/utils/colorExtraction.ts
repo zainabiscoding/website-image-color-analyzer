@@ -35,11 +35,16 @@ function quantizeColor(rgb: RGB, factor: number = 32): RGB {
 }
 
 function isNearWhite(rgb: RGB): boolean {
-  return rgb.r > 240 && rgb.g > 240 && rgb.b > 240;
+  return rgb.r > 250 && rgb.g > 250 && rgb.b > 250;
 }
 
 function isNearBlack(rgb: RGB): boolean {
-  return rgb.r < 15 && rgb.g < 15 && rgb.b < 15;
+  return rgb.r < 10 && rgb.g < 10 && rgb.b < 10;
+}
+
+function isLightBackground(rgb: RGB): boolean {
+  const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+  return luminance > 0.85;
 }
 
 function isGray(rgb: RGB): boolean {
@@ -52,7 +57,39 @@ export function extractColorsFromImage(image: HTMLImageElement, numColors: numbe
   const imageData = getImageData(image);
   const data = imageData.data;
   const buckets: Map<string, ColorBucket> = new Map();
+  const allBuckets: Map<string, ColorBucket> = new Map();
 
+  // First pass: collect ALL colors including light backgrounds
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+
+    if (a < 128) continue;
+
+    const rgb: RGB = { r, g, b };
+
+    // Only skip pure white/black
+    if (isNearWhite(rgb) || isNearBlack(rgb)) continue;
+
+    const quantized = quantizeColor(rgb, 16); // Finer quantization for backgrounds
+    const key = `${quantized.r},${quantized.g},${quantized.b}`;
+
+    const existing = allBuckets.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      allBuckets.set(key, { color: quantized, count: 1 });
+    }
+  }
+
+  // Find the most common color (likely background)
+  const sortedAll = Array.from(allBuckets.values()).sort((a, b) => b.count - a.count);
+  const dominantColor = sortedAll[0];
+  const isDominantLight = dominantColor && isLightBackground(dominantColor.color);
+
+  // Second pass: collect accent colors (excluding the dominant if it's light)
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
     const g = data[i + 1];
@@ -64,6 +101,12 @@ export function extractColorsFromImage(image: HTMLImageElement, numColors: numbe
     const rgb: RGB = { r, g, b };
 
     if (isNearWhite(rgb) || isNearBlack(rgb)) continue;
+
+    // Skip dominant light background color for accent extraction
+    if (isDominantLight && dominantColor) {
+      const dist = colorDistance(rgb, dominantColor.color);
+      if (dist < 30) continue;
+    }
 
     const quantized = quantizeColor(rgb);
     const key = `${quantized.r},${quantized.g},${quantized.b}`;
@@ -77,7 +120,7 @@ export function extractColorsFromImage(image: HTMLImageElement, numColors: numbe
   }
 
   let sortedBuckets = Array.from(buckets.values())
-    .filter((b) => !isGray(b.color) || b.count > 50)
+    .filter((b) => !isGray(b.color) || b.count > 30)
     .sort((a, b) => b.count - a.count);
 
   const result: ColorBucket[] = [];
@@ -95,20 +138,37 @@ export function extractColorsFromImage(image: HTMLImageElement, numColors: numbe
     }
   }
 
-  const totalCount = result.reduce((sum, b) => sum + b.count, 0);
+  // Build final palette
+  const totalCount = result.reduce((sum, b) => sum + b.count, 0) + (dominantColor?.count || 0);
 
-  const roles: PaletteColor['role'][] = ['primary', 'secondary', 'accent', 'background', 'text', 'surface', 'border', 'accent'];
+  const paletteColors: PaletteColor[] = [];
 
-  return result.slice(0, numColors).map((bucket, index) => {
+  // Add background first if it's light
+  if (isDominantLight && dominantColor) {
+    const hex = rgbToHex(dominantColor.color);
+    paletteColors.push({
+      hex,
+      rgb: dominantColor.color,
+      hsl: rgbToHsl(dominantColor.color),
+      proportion: Math.round((dominantColor.count / totalCount) * 100),
+      role: 'background',
+    });
+  }
+
+  // Add accent colors
+  const roles: PaletteColor['role'][] = ['primary', 'secondary', 'accent', 'text', 'surface', 'border'];
+  result.slice(0, numColors - (isDominantLight ? 1 : 0)).forEach((bucket, index) => {
     const hex = rgbToHex(bucket.color);
-    return {
+    paletteColors.push({
       hex,
       rgb: bucket.color,
       hsl: rgbToHsl(bucket.color),
       proportion: Math.round((bucket.count / totalCount) * 100),
       role: roles[index % roles.length],
-    };
+    });
   });
+
+  return paletteColors;
 }
 
 export function extractColorsFromImageUrl(url: string): Promise<PaletteColor[]> {
