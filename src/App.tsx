@@ -35,7 +35,7 @@ export default function App() {
   const [isPreviewingOriginal, setIsPreviewingOriginal] = useState(true);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
-  const [bgGradient, setBgGradient] = useState('from-orange-50/40 via-pink-50/30 to-purple-50/40');
+  const [bgGradient, setBgGradient] = useState('linear-gradient(135deg, rgba(255, 237, 213, 0.4) 0%, rgba(252, 165, 165, 0.3) 50%, rgba(233, 213, 255, 0.4) 100%)');
 
   const handleImageColorsExtracted = useCallback((colors: PaletteColor[], url: string) => {
     const palette: Palette = {
@@ -92,18 +92,18 @@ export default function App() {
   };
 
   const handleRandomColors = () => {
-    const colors = [
-      'from-red-50/40 via-orange-50/30 to-yellow-50/40',
-      'from-blue-50/40 via-cyan-50/30 to-teal-50/40',
-      'from-green-50/40 via-emerald-50/30 to-lime-50/40',
-      'from-purple-50/40 via-violet-50/30 to-fuchsia-50/40',
-      'from-pink-50/40 via-rose-50/30 to-red-50/40',
-      'from-indigo-50/40 via-blue-50/30 to-cyan-50/40',
-      'from-amber-50/40 via-yellow-50/30 to-orange-50/40',
-      'from-teal-50/40 via-green-50/30 to-emerald-50/40',
+    const gradients = [
+      'linear-gradient(135deg, rgba(254, 202, 202, 0.4) 0%, rgba(253, 186, 116, 0.3) 50%, rgba(253, 224, 71, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(191, 219, 254, 0.4) 0%, rgba(103, 232, 249, 0.3) 50%, rgba(94, 234, 212, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(187, 247, 208, 0.4) 0%, rgba(110, 231, 183, 0.3) 50%, rgba(190, 242, 100, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(221, 214, 254, 0.4) 0%, rgba(196, 181, 253, 0.3) 50%, rgba(232, 121, 249, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(252, 165, 165, 0.4) 0%, rgba(251, 113, 133, 0.3) 50%, rgba(254, 202, 202, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(199, 210, 254, 0.4) 0%, rgba(147, 197, 253, 0.3) 50%, rgba(103, 232, 249, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(253, 230, 138, 0.4) 0%, rgba(253, 224, 71, 0.3) 50%, rgba(253, 186, 116, 0.4) 100%)',
+      'linear-gradient(135deg, rgba(153, 246, 228, 0.4) 0%, rgba(167, 243, 208, 0.3) 50%, rgba(110, 231, 183, 0.4) 100%)',
     ];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    setBgGradient(colors[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * gradients.length);
+    setBgGradient(gradients[randomIndex]);
   };
 
   const previewColors = isPreviewingOriginal
@@ -124,7 +124,10 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${bgGradient} transition-all duration-500`}>
+    <div 
+      className="min-h-screen transition-all duration-500"
+      style={{ background: bgGradient }}
+    >
       <Header onRandomColors={handleRandomColors} />
 
       {/* Notifications */}

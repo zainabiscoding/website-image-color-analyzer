@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Shuffle, Palette as PaletteIcon, X } from 'lucide-react';
 
 interface HeaderProps {
-  onRandomColors?: () => void;
-  onShowColors?: () => void;
+  onRandomColors: () => void;
 }
 
-export default function Header({ onRandomColors, onShowColors }: HeaderProps) {
+export default function Header({ onRandomColors }: HeaderProps) {
   const [showColorDetails, setShowColorDetails] = useState(false);
+
+  const handleRandomClick = () => {
+    console.log('Random button clicked!');
+    onRandomColors();
+  };
 
   return (
     <>
@@ -24,7 +28,7 @@ export default function Header({ onRandomColors, onShowColors }: HeaderProps) {
           
           <div className="flex items-center gap-2">
             <button
-              onClick={onRandomColors}
+              onClick={handleRandomClick}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-400 via-pink-400 to-purple-500 text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
               title="Generate random colors"
             >
