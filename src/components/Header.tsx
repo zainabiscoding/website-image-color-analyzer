@@ -38,7 +38,7 @@ export default function Header({ onRandomColors, theme }: HeaderProps) {
                 backgroundImage: `linear-gradient(to right, ${theme.primary}, ${theme.secondary}, ${theme.accent})`
               }}
             >
-              Palette
+              Palettee
             </h1>
           </div>
           
