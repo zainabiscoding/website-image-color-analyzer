@@ -70,7 +70,7 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
           Generated Palettes
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          {palettes.length} beautiful variations based on your colors ✨
+          {palettes.length} beautiful variations based on your colors
         </p>
       </div>
 
@@ -96,7 +96,7 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
                       <h3 className="font-bold text-gray-800">{paletteStyleLabels[palette.style]}</h3>
                       {isSelected && (
                         <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 text-white shadow-sm">
-                          ✨ Previewing
+                          Previewing
                         </span>
                       )}
                     </div>

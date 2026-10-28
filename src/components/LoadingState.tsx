@@ -12,10 +12,10 @@ export default function LoadingState() {
       </div>
       <div className="text-center space-y-2">
         <p className="font-bold text-xl text-gray-800">
-          Extracting colors... 🎨
+          Extracting colors...
         </p>
         <p className="text-sm text-gray-500">
-          Analyzing your image with magic ✨
+          Analyzing your image
         </p>
       </div>
       <div className="flex gap-2 mt-4">

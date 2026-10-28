@@ -102,7 +102,7 @@ export default function ImageUpload({ onColorsExtracted, onLoading, onError }: P
             </div>
             <div>
               <p className="font-bold text-gray-800 text-lg">
-                {dragActive ? 'Drop it like it\'s hot! 🔥' : 'Upload your image'}
+                {dragActive ? 'Drop it here!' : 'Upload your image'}
               </p>
               <p className="text-sm text-gray-500 mt-2">
                 Drag & drop or click to browse

@@ -130,7 +130,7 @@ export default function PalettePreview({ colors, paletteName }: Props) {
             Live Preview
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            {paletteName} 👀
+            {paletteName}
           </p>
         </div>
         <div className="flex items-center gap-1 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-full p-1 border border-blue-100">
@@ -167,56 +167,66 @@ export default function PalettePreview({ colors, paletteName }: Props) {
 
       {/* Preview mockup */}
       <div className={`mx-auto transition-all duration-300 ${
-        viewMode === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
+        viewMode === 'mobile' ? 'max-w-[375px] rounded-[2.5rem]' : 'max-w-full rounded-2xl'
       }`}>
         <div
-          className="rounded-2xl overflow-hidden shadow-xl border border-gray-200"
+          className={`overflow-hidden shadow-xl border ${viewMode === 'mobile' ? 'rounded-[2.5rem] border-8 border-gray-800' : 'rounded-2xl border-gray-200'}`}
           style={{ backgroundColor: background }}
         >
           {/* Nav bar */}
           <div
-            className="px-6 py-4 flex items-center justify-between border-b"
+            className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between border-b"
             style={{ backgroundColor: surface, borderColor: border }}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg shadow-sm" style={{ backgroundColor: primary }} />
-              <span className="font-bold text-sm" style={{ color: text }}>BrandName</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg shadow-sm" style={{ backgroundColor: primary }} />
+              <span className="font-bold text-xs sm:text-sm" style={{ color: text }}>BrandName</span>
             </div>
-            <div className="hidden sm:flex items-center gap-6">
-              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Home</span>
-              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>About</span>
-              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Services</span>
-              <button
-                className="px-5 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-shadow"
-                style={{ backgroundColor: primary, color: textOnPrimary }}
-              >
-                Get Started
-              </button>
-            </div>
-            <div className="sm:hidden">
-              <div className="w-6 h-0.5 rounded" style={{ backgroundColor: text }} />
-              <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
-              <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
-            </div>
+            {viewMode === 'mobile' ? (
+              <div className="flex flex-col gap-1">
+                <div className="w-5 h-0.5 rounded" style={{ backgroundColor: text }} />
+                <div className="w-5 h-0.5 rounded" style={{ backgroundColor: text }} />
+                <div className="w-5 h-0.5 rounded" style={{ backgroundColor: text }} />
+              </div>
+            ) : (
+              <>
+                <div className="hidden sm:flex items-center gap-6">
+                  <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Home</span>
+                  <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>About</span>
+                  <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Services</span>
+                  <button
+                    className="px-5 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-shadow"
+                    style={{ backgroundColor: primary, color: textOnPrimary }}
+                  >
+                    Get Started
+                  </button>
+                </div>
+                <div className="sm:hidden">
+                  <div className="w-6 h-0.5 rounded" style={{ backgroundColor: text }} />
+                  <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
+                  <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Hero section */}
-          <div className="px-6 py-12 sm:py-20 text-center">
-            <h1 className="text-2xl sm:text-4xl font-bold mb-4 leading-tight" style={{ color: text }}>
+          <div className={`px-4 sm:px-6 text-center ${viewMode === 'mobile' ? 'py-8' : 'py-12 sm:py-20'}`}>
+            <h1 className={`${viewMode === 'mobile' ? 'text-xl' : 'text-2xl sm:text-4xl'} font-bold mb-3 sm:mb-4 leading-tight`} style={{ color: text }}>
               Welcome to Our Platform
             </h1>
-            <p className="text-base max-w-lg mx-auto mb-8 leading-relaxed" style={{ color: text, opacity: 0.7 }}>
+            <p className={`${viewMode === 'mobile' ? 'text-sm px-2' : 'text-base'} max-w-lg mx-auto mb-6 sm:mb-8 leading-relaxed`} style={{ color: text, opacity: 0.7 }}>
               Build beautiful experiences with our carefully crafted design system and tools.
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className={`flex ${viewMode === 'mobile' ? 'flex-col gap-3' : 'items-center justify-center gap-4'}`}>
               <button
-                className="px-8 py-3 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                className={`${viewMode === 'mobile' ? 'w-full px-6 py-2.5 text-sm' : 'px-8 py-3 text-base'} rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow`}
                 style={{ backgroundColor: primary, color: textOnPrimary, boxShadow: `0 4px 14px ${primary}40` }}
               >
                 Start Free Trial
               </button>
               <button
-                className="px-8 py-3 rounded-xl text-base font-semibold border-2 hover:shadow-md transition-shadow"
+                className={`${viewMode === 'mobile' ? 'w-full px-6 py-2.5 text-sm' : 'px-8 py-3 text-base'} rounded-xl font-semibold border-2 hover:shadow-md transition-shadow`}
                 style={{ borderColor: secondary, color: text }}
               >
                 Learn More
@@ -225,45 +235,45 @@ export default function PalettePreview({ colors, paletteName }: Props) {
           </div>
 
           {/* Features section */}
-          <div className="px-6 pb-12">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className={`pb-8 sm:pb-12 ${viewMode === 'mobile' ? 'px-4' : 'px-6'}`}>
+            <div className={`grid ${viewMode === 'mobile' ? 'grid-cols-1 gap-4' : 'grid-cols-1 sm:grid-cols-3 gap-6'}`}>
               {[
-                { icon: '⚡', title: 'Fast Performance', desc: 'Lightning quick load times for the best user experience' },
-                { icon: '🎯', title: 'Easy to Use', desc: 'Intuitive interface design that anyone can master' },
-                { icon: '🔒', title: 'Secure', desc: 'Enterprise-grade security to protect your data' },
+                { title: 'Fast Performance', desc: 'Lightning quick load times for the best user experience' },
+                { title: 'Easy to Use', desc: 'Intuitive interface design that anyone can master' },
+                { title: 'Secure', desc: 'Enterprise-grade security to protect your data' },
               ].map((card, i) => (
                 <div
                   key={i}
-                  className="p-6 rounded-xl border hover:shadow-lg transition-shadow"
+                  className={`${viewMode === 'mobile' ? 'p-4' : 'p-6'} rounded-xl border hover:shadow-lg transition-shadow`}
                   style={{ backgroundColor: surface, borderColor: border }}
                 >
                   <div
-                    className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center text-2xl shadow-sm"
+                    className={`${viewMode === 'mobile' ? 'w-10 h-10 mb-3' : 'w-12 h-12 mb-4'} rounded-lg flex items-center justify-center shadow-sm`}
                     style={{ backgroundColor: `${accent}20` }}
                   >
-                    {card.icon}
+                    <div className="w-5 h-5 rounded" style={{ backgroundColor: accent }} />
                   </div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: text }}>{card.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: text, opacity: 0.6 }}>{card.desc}</p>
+                  <h3 className={`font-bold ${viewMode === 'mobile' ? 'text-sm mb-1' : 'text-base mb-2'}`} style={{ color: text }}>{card.title}</h3>
+                  <p className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'} leading-relaxed`} style={{ color: text, opacity: 0.6 }}>{card.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* CTA section */}
-          <div className="px-6 pb-12">
+          <div className={`${viewMode === 'mobile' ? 'px-4 pb-8' : 'px-6 pb-12'}`}>
             <div
-              className="rounded-2xl p-8 text-center"
+              className={`rounded-2xl text-center ${viewMode === 'mobile' ? 'p-6' : 'p-8'}`}
               style={{ backgroundColor: primary }}
             >
-              <h2 className="text-2xl font-bold mb-3" style={{ color: textOnPrimary }}>
+              <h2 className={`${viewMode === 'mobile' ? 'text-lg' : 'text-2xl'} font-bold mb-2 sm:mb-3`} style={{ color: textOnPrimary }}>
                 Ready to Get Started?
               </h2>
-              <p className="text-base mb-6 opacity-90" style={{ color: textOnPrimary }}>
+              <p className={`${viewMode === 'mobile' ? 'text-sm mb-4' : 'text-base mb-6'} opacity-90`} style={{ color: textOnPrimary }}>
                 Join thousands of satisfied customers today
               </p>
               <button
-                className="px-8 py-3 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                className={`${viewMode === 'mobile' ? 'px-6 py-2.5 text-sm' : 'px-8 py-3 text-base'} rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow`}
                 style={{ backgroundColor: surface, color: text }}
               >
                 Sign Up Now
@@ -272,15 +282,15 @@ export default function PalettePreview({ colors, paletteName }: Props) {
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-6 border-t" style={{ borderColor: border }}>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-sm" style={{ color: text, opacity: 0.5 }}>
+          <div className={`${viewMode === 'mobile' ? 'px-4 py-4' : 'px-6 py-6'} border-t`} style={{ borderColor: border }}>
+            <div className={`flex ${viewMode === 'mobile' ? 'flex-col gap-2' : 'flex-col sm:flex-row items-center justify-between gap-4'}`}>
+              <p className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>
                 © 2024 BrandName. All rights reserved.
               </p>
-              <div className="flex items-center gap-6">
-                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Privacy</span>
-                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Terms</span>
-                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Contact</span>
+              <div className={`flex ${viewMode === 'mobile' ? 'gap-4' : 'items-center gap-6'}`}>
+                <span className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>Privacy</span>
+                <span className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>Terms</span>
+                <span className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>Contact</span>
               </div>
             </div>
           </div>

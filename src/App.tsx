@@ -141,7 +141,6 @@ export default function App() {
           <div className="text-center space-y-8 py-8">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-pink-100 shadow-sm">
-                <span className="text-lg">🎨</span>
                 <span className="text-sm font-medium text-gray-700">Extract • Generate • Preview</span>
               </div>
               <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">
@@ -152,7 +151,7 @@ export default function App() {
                 </span>
               </h2>
               <p className="text-gray-600 max-w-xl mx-auto text-lg">
-                Upload an image and watch the magic happen ✨
+                Upload an image and watch the magic happen
               </p>
             </div>
 
@@ -178,18 +177,17 @@ export default function App() {
                 <Wand2 className="w-4 h-4" />
                 Try Demo Palette
               </button>
-              <p className="text-xs text-gray-500 mt-3">✨ No upload needed — explore with a sample palette</p>
+              <p className="text-xs text-gray-500 mt-3">No upload needed — explore with a sample palette</p>
             </div>
 
             {/* Feature highlights */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 max-w-3xl mx-auto">
               {[
-                { icon: '🖼️', title: 'Upload Image', desc: 'Drop any image to extract its colors', color: 'from-orange-100 to-orange-50' },
-                { icon: '✨', title: 'Generate Variations', desc: '6 harmony styles for creative ideas', color: 'from-pink-100 to-pink-50' },
-                { icon: '🎯', title: 'Preview & Export', desc: 'See it in action, copy as CSS or JSON', color: 'from-purple-100 to-purple-50' },
+                { title: 'Upload Image', desc: 'Drop any image to extract its colors', color: 'from-orange-100 to-orange-50' },
+                { title: 'Generate Variations', desc: '6 harmony styles for creative ideas', color: 'from-pink-100 to-pink-50' },
+                { title: 'Preview & Export', desc: 'See it in action, copy as CSS or JSON', color: 'from-purple-100 to-purple-50' },
               ].map((feature) => (
                 <div key={feature.title} className={`p-5 rounded-2xl bg-gradient-to-br ${feature.color} border border-white/80 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200`}>
-                  <div className="text-3xl mb-3">{feature.icon}</div>
                   <h3 className="font-bold text-gray-800 text-sm">{feature.title}</h3>
                   <p className="text-xs text-gray-600 mt-1.5">{feature.desc}</p>
                 </div>
@@ -248,7 +246,7 @@ export default function App() {
       <footer className="border-t border-gray-100 mt-16 py-8 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm text-gray-500">
-            Made with <span className="text-pink-500">♥</span> • PaletteCraft
+            Made with <span className="text-pink-500">♥</span> by <span className="font-medium text-gray-700">zainabiscoding</span>
           </p>
         </div>
       </footer>

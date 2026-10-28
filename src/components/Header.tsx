@@ -10,15 +10,9 @@ export default function Header() {
           </div>
           <div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 bg-clip-text text-transparent">
-              PaletteCraft
+              Palettee
             </h1>
-            <p className="text-xs text-gray-500 hidden sm:block">Color Analysis & Palette Generator</p>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 bg-gradient-to-r from-orange-50 to-pink-50 px-3 py-1.5 rounded-full border border-orange-100">
-            ✨ v1.0
-          </span>
         </div>
       </div>
     </header>

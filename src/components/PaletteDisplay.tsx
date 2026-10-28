@@ -51,7 +51,7 @@ export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreview
             Extracted Palette
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            {palette.colors.length} colors extracted from your image ✨
+            {palette.colors.length} colors extracted from your image
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
