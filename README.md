@@ -1,183 +1,183 @@
-# 🎨 Palettee - الطيف اللوني
+# Palettee
 
-> أداة ويب لتحليل الألوان وتوليد لوحات ألوان متناسقة من الصور
+> A web-based color analysis tool for extracting and generating harmonious color palettes from images
 
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-purple.svg)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-6-yellow.svg)](https://vitejs.dev/)
 
-## 📖 نظرة عامة
+## Overview
 
-**Palettee** (الطيف اللوني) هي أداة ويب متقدمة لاستخراج الألوان من الصور وتوليد لوحات ألوان متناسقة. تساعد المصممين والمطورين على اكتشاف أنظمة ألوان جديدة وإعادة استخدامها في مشاريعهم.
+**Palettee** is an advanced web application for extracting colors from images and generating harmonious color palettes. It helps designers and developers discover new color systems and reuse them in their projects.
 
-✨ **المميزات الرئيسية:**
-- 🌍 **دعم ثنائي اللغة**: عربي وإنجليزي مع تبديل فوري
-- 🎨 **استخراج ذكي للألوان**: خوارزمية متقدمة لتحليل الصور
-- 🔄 **توليد تنويعات**: 6 أنماط تناغم مختلفة (دافئ، بارد، حديث، طبيعي، متشابه، متكامل)
-- 👁️ **معاينة حية**: شاهد الألوان في سياق تصميم موقع ويب
-- 📋 **نسخ وتصدير**: CSS، JSON، أو نسخ فردي
-- 🎲 **ثيمات عشوائية**: واجهة متغيرة مع كل ضغطة
-- 📱 **تصميم متجاوب**: يعمل على جميع الأجهزة
-- ♿ **فحص التباين**: تحذيرات WCAG للتباين
+**Key Features:**
+- **Bilingual Support**: Arabic and English with instant switching
+- **Smart Color Extraction**: Advanced algorithm for image analysis
+- **Variation Generation**: 6 different harmony styles (warm, cool, modern, natural, analogous, complementary)
+- **Live Preview**: See colors in a website design context
+- **Copy & Export**: CSS, JSON, or individual color copying
+- **Random Themes**: Changing interface with every click
+- **Responsive Design**: Works on all devices
+- **Contrast Checking**: WCAG contrast warnings
 
-## 🚀 التقنيات المستخدمة
+## Tech Stack
 
-- **React 18** - مكتبة واجهة المستخدم
-- **TypeScript** - للكتابة الآمنة
-- **Vite** - أداة البناء السريعة
-- **Tailwind CSS 4** - للتصميم
-- **Canvas API** - لمعالجة الصور
-- **Lucide React** - للأيقونات
-- **Google Fonts** - Caveat (إنجليزي) و Tajawal (عربي)
+- **React 18** - UI library
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool
+- **Tailwind CSS 4** - Styling
+- **Canvas API** - Image processing
+- **Lucide React** - Icons
+- **Google Fonts** - Caveat (English) and Tajawal (Arabic)
 
-## 📦 التثبيت والتشغيل
+## Installation & Setup
 
-### المتطلبات الأساسية
+### Prerequisites
 
-- Node.js 18+ 
-- npm أو yarn أو pnpm
+- Node.js 18+
+- npm, yarn, or pnpm
 
-### خطوات التشغيل
+### Getting Started
 
 ```bash
-# استنساخ المستودع
+# Clone the repository
 git clone https://github.com/zainabiscoding/palettee.git
 cd palettee
 
-# تثبيت الحزم
+# Install dependencies
 npm install
 
-# تشغيل خادم التطوير
+# Run development server
 npm run dev
 
-# بناء نسخة الإنتاج
+# Build for production
 npm run build
 
-# معاينة نسخة الإنتاج
+# Preview production build
 npm run preview
 ```
 
-## 🎯 كيفية الاستخدام
+## Usage Guide
 
-### 1. استخراج الألوان من صورة
+### 1. Extract Colors from an Image
 
-1. اضغط على منطقة الرفع أو اسحب وأفلت صورة
-2. انتظر حتى تكتمل عملية التحليل
-3. ستظهر الألوان المستخرجة مع قيم HEX و RGB
+1. Click on the upload area or drag and drop an image
+2. Wait for the analysis to complete
+3. Extracted colors will appear with HEX and RGB values
 
-### 2. توليد لوحات بديلة
+### 2. Generate Alternative Palettes
 
-- بعد استخراج الألوان، ستظهر 6 لوحات مولدة تلقائياً
-- كل لوحة تمثل نمط تناغم مختلف
-- اضغط على أي لوحة لمعاينتها
+- After color extraction, 6 automatically generated palettes will appear
+- Each palette represents a different harmony style
+- Click on any palette to preview it
 
-### 3. المعاينة الحية
+### 3. Live Preview
 
-- اضغط على زر "معاينة" لأي لوحة
-- شاهد كيف تبدو الألوان في تصميم موقع ويب
-- بدّل بين عرض الديكتوب والجوال
+- Click the "Preview" button for any palette
+- See how the colors look in a website design
+- Switch between desktop and mobile views
 
-### 4. التصدير والنسخ
+### 4. Export & Copy
 
-- **نسخ فردي**: اضغط على أي لون لنسخ قيمته
-- **نسخ الكل**: انسخ جميع الألوان دفعة واحدة
-- **تصدير CSS**: احصل على متغيرات CSS جاهزة
-- **تصدير JSON**: احصل على بيانات الألوان بصيغة JSON
+- **Individual Copy**: Click any color to copy its value
+- **Copy All**: Copy all colors at once
+- **Export CSS**: Get ready-to-use CSS variables
+- **Export JSON**: Get color data in JSON format
 
-## 🏗️ هيكل المشروع
+## Project Structure
 
 ```
 palettee/
 ├── src/
-│   ├── components/         # مكونات React
-│   │   ├── Header.tsx      # الهيدر مع أزرار التحكم
-│   │   ├── ImageUpload.tsx # منطقة رفع الصور
-│   │   ├── PaletteDisplay.tsx    # عرض اللوحة المستخرجة
-│   │   ├── GeneratedPalettes.tsx # اللوحات المولدة
-│   │   ├── PalettePreview.tsx    # المعاينة الحية
-│   │   ├── ColorSwatch.tsx       # عرض اللون الفردي
-│   │   └── LoadingState.tsx      # حالة التحميل
-│   ├── utils/              # الأدوات المساعدة
-│   │   ├── colorUtils.ts         # تحويلات الألوان
-│   │   ├── colorExtraction.ts    # استخراج الألوان
-│   │   ├── paletteGeneration.ts  # توليد اللوحات
-│   │   ├── exportUtils.ts        # أدوات التصدير
-│   │   └── translations.ts       # الترجمات
-│   ├── types/              # تعريفات TypeScript
+│   ├── components/         # React components
+│   │   ├── Header.tsx      # Header with control buttons
+│   │   ├── ImageUpload.tsx # Image upload area
+│   │   ├── PaletteDisplay.tsx    # Extracted palette display
+│   │   ├── GeneratedPalettes.tsx # Generated palettes
+│   │   ├── PalettePreview.tsx    # Live preview
+│   │   ├── ColorSwatch.tsx       # Individual color display
+│   │   └── LoadingState.tsx      # Loading state
+│   ├── utils/              # Utility functions
+│   │   ├── colorUtils.ts         # Color conversions
+│   │   ├── colorExtraction.ts    # Color extraction
+│   │   ├── paletteGeneration.ts  # Palette generation
+│   │   ├── exportUtils.ts        # Export tools
+│   │   └── translations.ts       # Translations
+│   ├── types/              # TypeScript definitions
 │   │   └── index.ts
-│   ├── App.tsx             # المكون الرئيسي
-│   ├── main.tsx            # نقطة الدخول
-│   └── index.css           # الأنماط العامة
-├── public/                 # الملفات العامة
-├── index.html              # HTML الرئيسي
-├── vite.config.ts          # إعدادات Vite
-├── tailwind.config.js      # إعدادات Tailwind
-├── tsconfig.json           # إعدادات TypeScript
-└── package.json            # إعدادات المشروع
+│   ├── App.tsx             # Main component
+│   ├── main.tsx            # Entry point
+│   └── index.css           # Global styles
+├── public/                 # Public assets
+├── index.html              # Main HTML
+├── vite.config.ts          # Vite configuration
+├── tailwind.config.js      # Tailwind configuration
+├── tsconfig.json           # TypeScript configuration
+└── package.json            # Project configuration
 ```
 
-## 🎨 أنماط التوليد
+## Generation Styles
 
-| النمط | الوصف |
+| Style | Description |
 |------|-------|
-| **Warm & Soft** | ألوان دافئة وناعمة |
-| **Cool & Calm** | ألوان باردة وهادئة |
-| **Modern & High Contrast** | تباين عالي وحديث |
-| **Natural & Earthy** | ألوان طبيعية وترابية |
-| **Analogous** | ألوان متجاورة في عجلة الألوان |
-| **Complementary** | ألوان متكاملة ومتقابلة |
+| **Warm & Soft** | Warm and gentle tones |
+| **Cool & Calm** | Cool and peaceful colors |
+| **Modern & High Contrast** | High contrast and modern |
+| **Natural & Earthy** | Natural and earthy tones |
+| **Analogous** | Colors adjacent on the color wheel |
+| **Complementary** | Complementary and contrasting colors |
 
-## 🌍 دعم اللغات
+## Language Support
 
-- **الإنجليزية**: واجهة كاملة بخط Caveat
-- **العربية**: واجهة كاملة بخط Tajawal مع دعم RTL
+- **English**: Full interface with Caveat font
+- **Arabic**: Full interface with Tajawal font and RTL support
 
-## 🎨 المميزات التفاعلية
+## Interactive Features
 
-### زر Random
-- يولد ثيم لوني جديد للواجهة بالكامل
-- 8 ثيمات مختلفة للاختيار
-- تغيير سلس مع انتقالات
+### Random Button
+- Generates a new color theme for the entire interface
+- 8 different themes to choose from
+- Smooth transitions with animations
 
-### زر Colors
-- يعرض تفاصيل الألوان الحالية
-- HEX values لكل لون
-- يتفاعل مع تغييرات الثيم
+### Colors Button
+- Displays current color details
+- HEX values for each color
+- Reacts to theme changes
 
-## 📱 التوافق
+## Browser Compatibility
 
-- ✅ Chrome / Edge
-- ✅ Firefox
-- ✅ Safari
-- ✅ Opera
+- Chrome / Edge
+- Firefox
+- Safari
+- Opera
 
-## 🤝 المساهمة
+## Contributing
 
-المساهمات مرحب بها! إذا كان لديك اقتراح:
+Contributions are welcome! If you have a suggestion:
 
-1. Fork المشروع
-2. أنشئ فرع للميزة (`git checkout -b feature/AmazingFeature`)
-3. Commit التغييرات (`git commit -m 'Add some AmazingFeature'`)
-4. Push للفرع (`git push origin feature/AmazingFeature`)
-5. افتح Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📄 الترخيص
+## License
 
-هذا المشروع مفتوح المصدر ومتاح تحت رخصة MIT.
+This project is open source and available under the MIT License.
 
-## 👩‍💻 المطور
+## Developer
 
 **zainabiscoding**
 
-Made with ♥ by zainabiscoding
+Made with love by zainabiscoding
 
 ---
 
 <div align="center">
 
-**استمتع بإنشاء لوحات ألوان رائعة!** 🎨✨
+**Enjoy creating beautiful color palettes!**
 
-[⭐ Star هذا المشروع](https://github.com/zainabiscoding/palettee) إذا أعجبك!
+[Star this project](https://github.com/zainabiscoding/palettee) if you like it!
 
 </div>
