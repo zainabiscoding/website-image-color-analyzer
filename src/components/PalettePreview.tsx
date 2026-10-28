@@ -1,38 +1,118 @@
 import { useState } from 'react';
 import { Monitor, Smartphone, AlertTriangle } from 'lucide-react';
 import { PaletteColor } from '../types';
-import { getContrastInfo, getTextColorForBg } from '../utils/colorUtils';
+import { getContrastInfo, getTextColorForBg, hexToRgb } from '../utils/colorUtils';
 
 interface Props {
   colors: PaletteColor[];
   paletteName: string;
 }
 
+interface ColorRoles {
+  background: string;
+  surface: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+  text: string;
+  textOnPrimary: string;
+  textOnBg: string;
+  border: string;
+}
+
+function assignColorRoles(colors: PaletteColor[]): ColorRoles {
+  if (colors.length === 0) {
+    return {
+      background: '#FFFFFF',
+      surface: '#F9FAFB',
+      primary: '#6366F1',
+      secondary: '#A5B4FC',
+      accent: '#F59E0B',
+      text: '#111827',
+      textOnPrimary: '#FFFFFF',
+      textOnBg: '#111827',
+      border: '#E5E7EB',
+    };
+  }
+
+  // Sort colors by proportion (most common first)
+  const sortedByProportion = [...colors].sort((a, b) => (b.proportion || 0) - (a.proportion || 0));
+  
+  // Analyze each color
+  const analyzed = colors.map((color) => {
+    const rgb = hexToRgb(color.hex);
+    const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    const max = Math.max(rgb.r, rgb.g, rgb.b);
+    const min = Math.min(rgb.r, rgb.g, rgb.b);
+    const saturation = max === 0 ? 0 : (max - min) / max;
+    
+    return {
+      ...color,
+      luminance,
+      saturation,
+    };
+  });
+
+  // Find background: lightest color with high proportion
+  const lightColors = analyzed.filter(c => c.luminance > 0.8).sort((a, b) => (b.proportion || 0) - (a.proportion || 0));
+  const background = lightColors[0]?.hex || analyzed.find(c => c.luminance > 0.7)?.hex || '#FFFFFF';
+
+  // Find surface: slightly darker than background
+  const surfaceColors = analyzed.filter(c => c.luminance > 0.9 && c.hex !== background);
+  const surface = surfaceColors[0]?.hex || '#FFFFFF';
+
+  // Find text: darkest color
+  const darkColors = analyzed.filter(c => c.luminance < 0.3).sort((a, b) => a.luminance - b.luminance);
+  const text = darkColors[0]?.hex || '#111827';
+
+  // Find primary: most saturated color with good visibility
+  const saturatedColors = analyzed
+    .filter(c => c.saturation > 0.3 && c.luminance > 0.2 && c.luminance < 0.8)
+    .sort((a, b) => b.saturation - a.saturation);
+  const primary = saturatedColors[0]?.hex || analyzed.find(c => c.saturation > 0.2)?.hex || '#6366F1';
+
+  // Find secondary: less saturated than primary
+  const secondaryColors = analyzed
+    .filter(c => c.hex !== primary && c.hex !== background && c.hex !== text && c.saturation > 0.1)
+    .sort((a, b) => b.saturation - a.saturation);
+  const secondary = secondaryColors[1]?.hex || secondaryColors[0]?.hex || '#A5B4FC';
+
+  // Find accent: different hue from primary
+  const accentColors = analyzed
+    .filter(c => c.hex !== primary && c.hex !== secondary && c.hex !== background && c.saturation > 0.2)
+    .sort((a, b) => b.saturation - a.saturation);
+  const accent = accentColors[0]?.hex || '#F59E0B';
+
+  // Find border: light gray-ish color
+  const borderColors = analyzed
+    .filter(c => c.luminance > 0.7 && c.luminance < 0.95 && c.saturation < 0.1)
+    .sort((a, b) => a.saturation - b.saturation);
+  const border = borderColors[0]?.hex || '#E5E7EB';
+
+  return {
+    background,
+    surface,
+    primary,
+    secondary,
+    accent,
+    text,
+    border,
+    textOnPrimary: getTextColorForBg(primary),
+    textOnBg: getTextColorForBg(background),
+  };
+}
+
 export default function PalettePreview({ colors, paletteName }: Props) {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const roles = assignColorRoles(colors);
 
-  const getColor = (role: string): string => {
-    const found = colors.find((c) => c.role === role);
-    return found?.hex || colors[0]?.hex || '#6D5AE6';
-  };
-
-  const bgColor = getColor('background') || '#F4F1EA';
-  const primaryColor = getColor('primary') || '#6D5AE6';
-  const secondaryColor = getColor('secondary') || '#E6CBA8';
-  const textColor = getColor('text') || '#24243A';
-  const accentColor = getColor('accent') || '#B9C8B1';
-  const surfaceColor = getColor('surface') || '#FFFFFF';
-  const borderColor = getColor('border') || '#E5E7EB';
-
-  const textOnPrimary = getTextColorForBg(primaryColor);
-  const textOnBg = getTextColorForBg(bgColor);
-  const textOnSurface = getTextColorForBg(surfaceColor);
+  const { background, surface, primary, secondary, accent, text, border, textOnPrimary, textOnBg } = roles;
 
   const contrastWarnings: { pair: string; ratio: number }[] = [];
   
   const textBgContrast = getContrastInfo(
     { r: parseInt(textOnBg.slice(1, 3), 16), g: parseInt(textOnBg.slice(3, 5), 16), b: parseInt(textOnBg.slice(5, 7), 16) },
-    { r: parseInt(bgColor.slice(1, 3), 16), g: parseInt(bgColor.slice(3, 5), 16), b: parseInt(bgColor.slice(5, 7), 16) }
+    { r: parseInt(background.slice(1, 3), 16), g: parseInt(background.slice(3, 5), 16), b: parseInt(background.slice(5, 7), 16) }
   );
   
   if (!textBgContrast.accessible) {
@@ -40,7 +120,7 @@ export default function PalettePreview({ colors, paletteName }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -90,108 +170,137 @@ export default function PalettePreview({ colors, paletteName }: Props) {
         viewMode === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
       }`}>
         <div
-          className="rounded-2xl overflow-hidden shadow-lg border border-gray-200"
-          style={{ backgroundColor: bgColor }}
+          className="rounded-2xl overflow-hidden shadow-xl border border-gray-200"
+          style={{ backgroundColor: background }}
         >
           {/* Nav bar */}
           <div
             className="px-6 py-4 flex items-center justify-between border-b"
-            style={{ backgroundColor: surfaceColor, borderColor }}
+            style={{ backgroundColor: surface, borderColor: border }}
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: primaryColor }} />
-              <span className="font-bold text-sm" style={{ color: textColor }}>BrandName</span>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg shadow-sm" style={{ backgroundColor: primary }} />
+              <span className="font-bold text-sm" style={{ color: text }}>BrandName</span>
             </div>
-            <div className="hidden sm:flex items-center gap-4">
-              <span className="text-xs" style={{ color: textColor, opacity: 0.7 }}>Home</span>
-              <span className="text-xs" style={{ color: textColor, opacity: 0.7 }}>About</span>
-              <span className="text-xs" style={{ color: textColor, opacity: 0.7 }}>Services</span>
+            <div className="hidden sm:flex items-center gap-6">
+              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Home</span>
+              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>About</span>
+              <span className="text-sm font-medium" style={{ color: text, opacity: 0.7 }}>Services</span>
               <button
-                className="px-4 py-1.5 rounded-lg text-xs font-medium"
-                style={{ backgroundColor: primaryColor, color: textOnPrimary }}
+                className="px-5 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-shadow"
+                style={{ backgroundColor: primary, color: textOnPrimary }}
               >
                 Get Started
               </button>
             </div>
             <div className="sm:hidden">
-              <div className="w-6 h-0.5 rounded" style={{ backgroundColor: textColor }} />
-              <div className="w-6 h-0.5 rounded mt-1" style={{ backgroundColor: textColor }} />
-              <div className="w-6 h-0.5 rounded mt-1" style={{ backgroundColor: textColor }} />
+              <div className="w-6 h-0.5 rounded" style={{ backgroundColor: text }} />
+              <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
+              <div className="w-6 h-0.5 rounded mt-1.5" style={{ backgroundColor: text }} />
             </div>
           </div>
 
           {/* Hero section */}
-          <div className="px-6 py-10 sm:py-16 text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: textColor }}>
+          <div className="px-6 py-12 sm:py-20 text-center">
+            <h1 className="text-2xl sm:text-4xl font-bold mb-4 leading-tight" style={{ color: text }}>
               Welcome to Our Platform
             </h1>
-            <p className="text-sm max-w-md mx-auto mb-6 opacity-70" style={{ color: textColor }}>
+            <p className="text-base max-w-lg mx-auto mb-8 leading-relaxed" style={{ color: text, opacity: 0.7 }}>
               Build beautiful experiences with our carefully crafted design system and tools.
             </p>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-4">
               <button
-                className="px-6 py-2.5 rounded-xl text-sm font-medium shadow-lg"
-                style={{ backgroundColor: primaryColor, color: textOnPrimary, boxShadow: `0 4px 14px ${primaryColor}40` }}
+                className="px-8 py-3 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                style={{ backgroundColor: primary, color: textOnPrimary, boxShadow: `0 4px 14px ${primary}40` }}
               >
                 Start Free Trial
               </button>
               <button
-                className="px-6 py-2.5 rounded-xl text-sm font-medium border-2"
-                style={{ borderColor: secondaryColor, color: textColor }}
+                className="px-8 py-3 rounded-xl text-base font-semibold border-2 hover:shadow-md transition-shadow"
+                style={{ borderColor: secondary, color: text }}
               >
                 Learn More
               </button>
             </div>
           </div>
 
-          {/* Cards section */}
-          <div className="px-6 pb-8">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Features section */}
+          <div className="px-6 pb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
-                { title: 'Fast Performance', desc: 'Lightning quick load times' },
-                { title: 'Easy to Use', desc: 'Intuitive interface design' },
-                { title: 'Secure', desc: 'Enterprise-grade security' },
+                { icon: '⚡', title: 'Fast Performance', desc: 'Lightning quick load times for the best user experience' },
+                { icon: '🎯', title: 'Easy to Use', desc: 'Intuitive interface design that anyone can master' },
+                { icon: '🔒', title: 'Secure', desc: 'Enterprise-grade security to protect your data' },
               ].map((card, i) => (
                 <div
                   key={i}
-                  className="p-5 rounded-xl border"
-                  style={{ backgroundColor: surfaceColor, borderColor }}
+                  className="p-6 rounded-xl border hover:shadow-lg transition-shadow"
+                  style={{ backgroundColor: surface, borderColor: border }}
                 >
                   <div
-                    className="w-10 h-10 rounded-lg mb-3 flex items-center justify-center text-lg"
-                    style={{ backgroundColor: `${accentColor}30` }}
+                    className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center text-2xl shadow-sm"
+                    style={{ backgroundColor: `${accent}20` }}
                   >
-                    {['⚡', '🎯', '🔒'][i]}
+                    {card.icon}
                   </div>
-                  <h3 className="font-semibold text-sm mb-1" style={{ color: textColor }}>{card.title}</h3>
-                  <p className="text-xs opacity-60" style={{ color: textColor }}>{card.desc}</p>
+                  <h3 className="font-bold text-base mb-2" style={{ color: text }}>{card.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: text, opacity: 0.6 }}>{card.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
+          {/* CTA section */}
+          <div className="px-6 pb-12">
+            <div
+              className="rounded-2xl p-8 text-center"
+              style={{ backgroundColor: primary }}
+            >
+              <h2 className="text-2xl font-bold mb-3" style={{ color: textOnPrimary }}>
+                Ready to Get Started?
+              </h2>
+              <p className="text-base mb-6 opacity-90" style={{ color: textOnPrimary }}>
+                Join thousands of satisfied customers today
+              </p>
+              <button
+                className="px-8 py-3 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                style={{ backgroundColor: surface, color: text }}
+              >
+                Sign Up Now
+              </button>
+            </div>
+          </div>
+
           {/* Footer */}
-          <div className="px-6 py-4 border-t text-center" style={{ borderColor }}>
-            <p className="text-xs opacity-50" style={{ color: textColor }}>
-              © 2024 BrandName. All rights reserved.
-            </p>
+          <div className="px-6 py-6 border-t" style={{ borderColor: border }}>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm" style={{ color: text, opacity: 0.5 }}>
+                © 2024 BrandName. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Privacy</span>
+                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Terms</span>
+                <span className="text-sm" style={{ color: text, opacity: 0.5 }}>Contact</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Color mapping legend */}
-      <div className="flex flex-wrap gap-3 text-xs">
+      <div className="flex flex-wrap gap-4 text-xs">
         {[
-          { label: 'Background', color: bgColor },
-          { label: 'Primary', color: primaryColor },
-          { label: 'Secondary', color: secondaryColor },
-          { label: 'Text', color: textColor },
-          { label: 'Accent', color: accentColor },
-          { label: 'Surface', color: surfaceColor },
+          { label: 'Background', color: background },
+          { label: 'Surface', color: surface },
+          { label: 'Primary', color: primary },
+          { label: 'Secondary', color: secondary },
+          { label: 'Accent', color: accent },
+          { label: 'Text', color: text },
+          { label: 'Border', color: border },
         ].map((item) => (
-          <div key={item.label} className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm border border-gray-200" style={{ backgroundColor: item.color }} />
-            <span className="text-gray-500">{item.label}</span>
+          <div key={item.label} className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded border border-gray-200 shadow-sm" style={{ backgroundColor: item.color }} />
+            <span className="text-gray-600 font-medium">{item.label}</span>
           </div>
         ))}
       </div>

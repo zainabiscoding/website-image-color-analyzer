@@ -32,7 +32,7 @@ export default function App() {
   const [originalPalette, setOriginalPalette] = useState<Palette | null>(null);
   const [generatedPalettes, setGeneratedPalettes] = useState<GeneratedPalette[]>([]);
   const [selectedPreviewPalette, setSelectedPreviewPalette] = useState<GeneratedPalette | null>(null);
-  const [isPreviewingOriginal, setIsPreviewingOriginal] = useState(false);
+  const [isPreviewingOriginal, setIsPreviewingOriginal] = useState(true);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
 
