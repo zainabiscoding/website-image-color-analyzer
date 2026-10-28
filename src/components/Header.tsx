@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Shuffle, Palette as PaletteIcon, X } from 'lucide-react';
+import { Shuffle, Palette as PaletteIcon, X, Globe } from 'lucide-react';
+import { translations, Language } from '../utils/translations';
 
 interface ThemeColors {
   primary: string;
@@ -14,13 +15,20 @@ interface ThemeColors {
 interface HeaderProps {
   onRandomColors: () => void;
   theme: ThemeColors;
+  language: Language;
+  onLanguageChange: (lang: Language) => void;
 }
 
-export default function Header({ onRandomColors, theme }: HeaderProps) {
+export default function Header({ onRandomColors, theme, language, onLanguageChange }: HeaderProps) {
   const [showColorDetails, setShowColorDetails] = useState(false);
+  const t = translations[language];
 
   const handleRandomClick = () => {
     onRandomColors();
+  };
+
+  const toggleLanguage = () => {
+    onLanguageChange(language === 'en' ? 'ar' : 'en');
   };
 
   return (
@@ -34,15 +42,29 @@ export default function Header({ onRandomColors, theme }: HeaderProps) {
             <h1 
               className="text-3xl font-bold bg-clip-text text-transparent"
               style={{ 
-                fontFamily: 'Caveat, cursive',
+                fontFamily: language === 'ar' ? 'Tajawal, sans-serif' : 'Caveat, cursive',
                 backgroundImage: `linear-gradient(to right, ${theme.primary}, ${theme.secondary}, ${theme.accent})`
               }}
             >
-              Palettee
+              {t.logo}
             </h1>
           </div>
           
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium hover:shadow-md transition-all duration-200"
+              style={{ 
+                backgroundColor: theme.surface,
+                border: `2px solid ${theme.border}`,
+                color: theme.text
+              }}
+              title="Toggle language"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="hidden sm:inline">{language === 'en' ? 'عربي' : 'EN'}</span>
+            </button>
+            
             <button
               onClick={handleRandomClick}
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
@@ -50,7 +72,7 @@ export default function Header({ onRandomColors, theme }: HeaderProps) {
               title="Generate random colors"
             >
               <Shuffle className="w-4 h-4" />
-              <span className="hidden sm:inline">Random</span>
+              <span className="hidden sm:inline">{t.random}</span>
             </button>
             
             <button
@@ -64,7 +86,7 @@ export default function Header({ onRandomColors, theme }: HeaderProps) {
               title="Show color details"
             >
               <PaletteIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Colors</span>
+              <span className="hidden sm:inline">{t.colors}</span>
             </button>
           </div>
         </div>

@@ -2,14 +2,28 @@ import { useState, useRef } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { validateImageFile, extractColorsFromImage } from '../utils/colorExtraction';
 import { PaletteColor } from '../types';
+import { translations, Language } from '../utils/translations';
+
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  surface: string;
+  border: string;
+}
 
 interface Props {
   onColorsExtracted: (colors: PaletteColor[], imageUrl: string) => void;
   onLoading: (loading: boolean) => void;
   onError: (error: string) => void;
+  language?: Language;
+  theme?: ThemeColors;
 }
 
-export default function ImageUpload({ onColorsExtracted, onLoading, onError }: Props) {
+export default function ImageUpload({ onColorsExtracted, onLoading, onError, language = 'en', theme }: Props) {
+  const t = translations[language];
   const [preview, setPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -101,14 +115,14 @@ export default function ImageUpload({ onColorsExtracted, onLoading, onError }: P
               <Upload className={`w-7 h-7 ${dragActive ? 'text-white' : 'text-pink-500'}`} />
             </div>
             <div>
-              <p className="font-bold text-gray-800 text-lg">
-                {dragActive ? 'Drop it here!' : 'Upload your image'}
+              <p className="font-bold text-lg" style={{ color: theme?.text || '#1F2937' }}>
+                {dragActive ? t.uploadDragActive : t.uploadTitle}
               </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Drag & drop or click to browse
+              <p className="text-sm mt-2" style={{ color: theme?.text, opacity: 0.6 }}>
+                {t.uploadSubtitle}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
-                PNG, JPG, or WebP • Max 10MB
+              <p className="text-xs mt-1" style={{ color: theme?.text, opacity: 0.4 }}>
+                {t.uploadFormats}
               </p>
             </div>
           </div>

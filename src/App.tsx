@@ -9,6 +9,7 @@ import LoadingState from './components/LoadingState';
 import { Palette, GeneratedPalette, PaletteColor } from './types';
 import { generateAllPalettes } from './utils/paletteGeneration';
 import { hexToRgb, rgbToHsl } from './utils/colorUtils';
+import { translations, Language } from './utils/translations';
 import { v4 as uuidv4 } from 'uuid';
 
 function makeColor(hex: string, proportion: number, role: PaletteColor['role']): PaletteColor {
@@ -60,6 +61,10 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
   const [theme, setTheme] = useState<ThemeColors>(generateRandomTheme());
+  const [language, setLanguage] = useState<Language>('en');
+  
+  const t = translations[language];
+  const isRTL = language === 'ar';
 
   const handleImageColorsExtracted = useCallback((colors: PaletteColor[], url: string) => {
     const palette: Palette = {
@@ -75,9 +80,9 @@ export default function App() {
     setGeneratedPalettes(generated);
     setSelectedPreviewPalette(generated[0] || null);
     setHasResult(true);
-    setSuccessMessage('Colors extracted successfully!');
+    setSuccessMessage(translations[language].successExtracted);
     setTimeout(() => setSuccessMessage(null), 3000);
-  }, []);
+  }, [language]);
 
   const handleError = useCallback((msg: string) => {
     setError(msg);
@@ -101,10 +106,10 @@ export default function App() {
       setSelectedPreviewPalette(generated[0] || null);
       setHasResult(true);
       setLoading(false);
-      setSuccessMessage('Demo palette loaded! Explore the colors and generated palettes.');
+      setSuccessMessage(translations[language].successDemo);
       setTimeout(() => setSuccessMessage(null), 3000);
     }, 800);
-  }, []);
+  }, [language]);
 
   const handleReset = () => {
     setOriginalPalette(null);
@@ -139,9 +144,17 @@ export default function App() {
   return (
     <div 
       className="min-h-screen transition-all duration-500"
-      style={{ backgroundColor: theme.background }}
+      style={{ 
+        backgroundColor: theme.background,
+        direction: isRTL ? 'rtl' : 'ltr'
+      }}
     >
-      <Header onRandomColors={handleRandomColors} theme={theme} />
+      <Header 
+        onRandomColors={handleRandomColors} 
+        theme={theme} 
+        language={language}
+        onLanguageChange={setLanguage}
+      />
 
       {/* Notifications */}
       {error && (
@@ -176,31 +189,33 @@ export default function App() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm shadow-sm transition-all duration-500"
                 style={{ backgroundColor: `${theme.surface}CC`, border: `1px solid ${theme.border}` }}
               >
-                <span className="text-sm font-medium" style={{ color: theme.text }}>Extract • Generate • Preview</span>
+                <span className="text-sm font-medium" style={{ color: theme.text }}>{t.heroBadge}</span>
               </div>
               <h2 className="text-3xl sm:text-5xl font-bold leading-tight" style={{ color: theme.text }}>
-                Discover Beautiful
+                {t.heroTitle1}
                 <br />
                 <span 
                   className="bg-clip-text text-transparent"
                   style={{ backgroundImage: `linear-gradient(to right, ${theme.primary}, ${theme.secondary}, ${theme.accent})` }}
                 >
-                  Color Palettes
+                  {t.heroTitle2}
                 </span>
               </h2>
               <p className="max-w-xl mx-auto text-lg" style={{ color: theme.text, opacity: 0.7 }}>
-                Upload an image and watch the magic happen
+                {t.heroSubtitle}
               </p>
             </div>
 
             {loading ? (
-              <LoadingState />
+              <LoadingState language={language} theme={theme} />
             ) : (
               <div className="pt-2">
                 <ImageUpload
                   onColorsExtracted={handleImageColorsExtracted}
                   onLoading={setLoading}
                   onError={handleError}
+                  language={language}
+                  theme={theme}
                 />
               </div>
             )}
@@ -214,17 +229,17 @@ export default function App() {
                 style={{ background: `linear-gradient(to right, ${theme.primary}, ${theme.secondary})` }}
               >
                 <Wand2 className="w-4 h-4" />
-                Try Demo Palette
+                {t.demoButton}
               </button>
-              <p className="text-xs mt-3" style={{ color: theme.text, opacity: 0.6 }}>Explore with a sample palette</p>
+              <p className="text-xs mt-3" style={{ color: theme.text, opacity: 0.6 }}>{t.demoSubtitle}</p>
             </div>
 
             {/* Feature highlights */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 max-w-3xl mx-auto">
               {[
-                { title: 'Upload Image', desc: 'Drop any image to extract its colors', color: theme.primary },
-                { title: 'Generate Variations', desc: '6 harmony styles for creative ideas', color: theme.secondary },
-                { title: 'Preview & Export', desc: 'See it in action, copy as CSS or JSON', color: theme.accent },
+                { title: t.feature1Title, desc: t.feature1Desc, color: theme.primary },
+                { title: t.feature2Title, desc: t.feature2Desc, color: theme.secondary },
+                { title: t.feature3Title, desc: t.feature3Desc, color: theme.accent },
               ].map((feature, i) => (
                 <div 
                   key={feature.title} 
@@ -256,7 +271,7 @@ export default function App() {
                   color: theme.text
                 }}
               >
-                ← New Analysis
+                {t.newAnalysis}
               </button>
             </div>
 
@@ -275,6 +290,7 @@ export default function App() {
                   onPreview={handlePreviewOriginal}
                   isPreviewing={isPreviewingOriginal}
                   theme={theme}
+                  language={language}
                 />
               </section>
             )}
@@ -293,6 +309,7 @@ export default function App() {
                   onSelectPalette={handlePreviewGenerated}
                   selectedPaletteId={selectedPreviewPalette?.id}
                   theme={theme}
+                  language={language}
                 />
               </section>
             )}
@@ -306,7 +323,7 @@ export default function App() {
                   borderColor: theme.border
                 }}
               >
-                <PalettePreview colors={previewColors} paletteName={previewName} />
+                <PalettePreview colors={previewColors} paletteName={previewName} language={language} theme={theme} />
               </section>
             )}
           </div>
@@ -323,7 +340,7 @@ export default function App() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm" style={{ color: theme.text, opacity: 0.6 }}>
-            Made with <span style={{ color: theme.primary }}>♥</span> by <span className="font-medium" style={{ color: theme.text }}>zainabiscoding</span>
+            {t.footerText} <span style={{ color: theme.primary }}>♥</span> {isRTL ? '' : 'by'} <span className="font-medium" style={{ color: theme.text }}>zainabiscoding</span>
           </p>
         </div>
       </footer>

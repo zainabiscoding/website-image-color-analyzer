@@ -3,6 +3,7 @@ import { Sparkles, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { GeneratedPalette, PaletteStyle } from '../types';
 import { paletteStyleLabels, paletteStyleDescriptions } from '../utils/paletteGeneration';
 import { formatPaletteForCopy, exportPaletteAsCSS, exportPaletteAsJSON, downloadFile } from '../utils/exportUtils';
+import { translations, Language } from '../utils/translations';
 
 interface ThemeColors {
   primary: string;
@@ -19,9 +20,11 @@ interface Props {
   onSelectPalette: (palette: GeneratedPalette) => void;
   selectedPaletteId?: string;
   theme?: ThemeColors;
+  language?: Language;
 }
 
-export default function GeneratedPalettes({ palettes, onSelectPalette, selectedPaletteId, theme }: Props) {
+export default function GeneratedPalettes({ palettes, onSelectPalette, selectedPaletteId, theme, language = 'en' }: Props) {
+  const t = translations[language];
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedIds, setCopiedIds] = useState<Set<string>>(new Set());
   const [copiedColorKey, setCopiedColorKey] = useState<string | null>(null);
@@ -74,14 +77,14 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
+        <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: theme?.text || '#1F2937' }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme?.secondary || '#F7931E'}, ${theme?.accent || '#FFC857'})` }}>
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          Generated Palettes
+          {t.generatedPalettes}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          {palettes.length} beautiful variations based on your colors
+        <p className="text-sm mt-1" style={{ color: theme?.text, opacity: 0.6 }}>
+          {palettes.length} {t.variationsBased}
         </p>
       </div>
 
@@ -180,13 +183,13 @@ export default function GeneratedPalettes({ palettes, onSelectPalette, selectedP
                 {/* Preview button */}
                 <button
                   onClick={() => onSelectPalette(palette)}
-                  className={`mt-3 text-xs font-bold transition-all ${
-                    isSelected 
-                      ? 'text-pink-600' 
-                      : 'text-gray-500 hover:text-pink-600 hover:translate-x-1'
-                  }`}
+                  className="mt-3 text-xs font-bold transition-all"
+                  style={{
+                    color: isSelected ? theme?.primary : theme?.text,
+                    opacity: isSelected ? 1 : 0.6
+                  }}
                 >
-                  {isSelected ? '✓ Previewing this palette' : 'Preview this palette →'}
+                  {isSelected ? t.previewingThisPalette : t.previewThisPalette}
                 </button>
               </div>
 

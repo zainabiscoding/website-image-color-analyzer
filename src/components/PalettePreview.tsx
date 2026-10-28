@@ -2,10 +2,23 @@ import { useState } from 'react';
 import { Monitor, Smartphone, AlertTriangle } from 'lucide-react';
 import { PaletteColor } from '../types';
 import { getContrastInfo, getTextColorForBg, hexToRgb } from '../utils/colorUtils';
+import { translations, Language } from '../utils/translations';
+
+interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  surface: string;
+  border: string;
+}
 
 interface Props {
   colors: PaletteColor[];
   paletteName: string;
+  language?: Language;
+  theme?: ThemeColors;
 }
 
 interface ColorRoles {
@@ -102,9 +115,10 @@ function assignColorRoles(colors: PaletteColor[]): ColorRoles {
   };
 }
 
-export default function PalettePreview({ colors, paletteName }: Props) {
+export default function PalettePreview({ colors, paletteName, language = 'en', theme }: Props) {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const roles = assignColorRoles(colors);
+  const t = translations[language];
 
   const { background, surface, primary, secondary, accent, text, border, textOnPrimary, textOnBg } = roles;
 
@@ -123,13 +137,13 @@ export default function PalettePreview({ colors, paletteName }: Props) {
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
+          <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: theme?.text || '#1F2937' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme?.accent || '#FFC857'}, ${theme?.primary || '#FF6B35'})` }}>
               <Monitor className="w-4 h-4 text-white" />
             </div>
-            Live Preview
+            {t.livePreview}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm mt-1" style={{ color: theme?.text, opacity: 0.6 }}>
             {paletteName}
           </p>
         </div>

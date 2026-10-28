@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Palette as PaletteType } from '../types';
 import ColorSwatch from './ColorSwatch';
 import { formatPaletteForCopy, exportPaletteAsCSS, exportPaletteAsJSON, downloadFile } from '../utils/exportUtils';
+import { translations, Language } from '../utils/translations';
 
 interface ThemeColors {
   primary: string;
@@ -20,9 +21,11 @@ interface Props {
   onPreview?: () => void;
   isPreviewing?: boolean;
   theme?: ThemeColors;
+  language?: Language;
 }
 
-export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreviewing, theme }: Props) {
+export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreviewing, theme, language = 'en' }: Props) {
+  const t = translations[language];
   const [copiedAll, setCopiedAll] = useState(false);
 
   const handleCopyAll = async () => {
@@ -55,36 +58,42 @@ export default function PaletteDisplay({ palette, imageUrl, onPreview, isPreview
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+          <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: theme?.text || '#1F2937' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme?.primary || '#FF6B35'}, ${theme?.secondary || '#F7931E'})` }}>
               <Palette className="w-4 h-4 text-white" />
             </div>
-            Extracted Palette
+            {t.extractedPalette}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
-            {palette.colors.length} colors extracted from your image
+          <p className="text-sm mt-1" style={{ color: theme?.text, opacity: 0.6 }}>
+            {palette.colors.length} {t.colorsExtracted}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {onPreview && (
             <button
               onClick={onPreview}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isPreviewing
-                  ? 'bg-violet-100 text-violet-700 border border-violet-200'
-                  : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
-              }`}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: isPreviewing ? `${theme?.primary}20` : theme?.surface,
+                color: isPreviewing ? theme?.primary : theme?.text,
+                border: `1px solid ${isPreviewing ? theme?.primary : theme?.border}`
+              }}
             >
               <Eye className="w-4 h-4" />
-              {isPreviewing ? 'Previewing' : 'Preview'}
+              {isPreviewing ? t.previewing : t.preview}
             </button>
           )}
           <button
             onClick={handleCopyAll}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              backgroundColor: theme?.surface,
+              color: theme?.text,
+              border: `1px solid ${theme?.border}`
+            }}
           >
             {copiedAll ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-            {copiedAll ? 'Copied!' : 'Copy All'}
+            {copiedAll ? t.copied : t.copyAll}
           </button>
           <button
             onClick={handleExportCSS}
