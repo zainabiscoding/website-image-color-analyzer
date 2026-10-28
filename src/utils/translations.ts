@@ -81,8 +81,8 @@ export const translations = {
     // Hero section
     heroBadge: 'استخراج • توليد • معاينة',
     heroTitle1: 'اكتشف',
-    heroTitle2: 'لوحات ألوان رائعة',
-    heroSubtitle: 'ارفع صورة وشاهد السحر يحدث',
+    heroTitle2: 'اللوحات اللونية',
+    heroSubtitle: 'ارفع الصور واستكشف الألوان',
     
     // Upload section
     uploadTitle: 'ارفع صورتك',
