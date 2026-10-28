@@ -299,7 +299,7 @@ export default function PalettePreview({ colors, paletteName, language = 'en', t
           <div className={`${viewMode === 'mobile' ? 'px-4 py-4' : 'px-6 py-6'} border-t`} style={{ borderColor: border }}>
             <div className={`flex ${viewMode === 'mobile' ? 'flex-col gap-2' : 'flex-col sm:flex-row items-center justify-between gap-4'}`}>
               <p className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>
-                © 2024 BrandName. All rights reserved.
+                © 2006 BrandName. All rights reserved.
               </p>
               <div className={`flex ${viewMode === 'mobile' ? 'gap-4' : 'items-center gap-6'}`}>
                 <span className={`${viewMode === 'mobile' ? 'text-xs' : 'text-sm'}`} style={{ color: text, opacity: 0.5 }}>Privacy</span>
